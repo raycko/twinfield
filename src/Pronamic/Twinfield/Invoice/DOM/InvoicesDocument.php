@@ -128,6 +128,7 @@ class InvoicesDocument extends \DOMDocument
             'subarticle'      => 'getSubArticle',
             'description'     => 'getDescription',
             'unitspriceexcl'  => 'getUnitsPriceExcl',
+            'unitspriceinc'   => 'getUnitsPriceInc',
             'units'           => 'getUnits',
             'vatcode'         => 'getVatCode',
             'freetext1'       => 'getFreeText1',
@@ -150,7 +151,11 @@ class InvoicesDocument extends \DOMDocument
                 
                 // Make text node for method value
                 $node = $this->createTextNode($line->$method());
-                
+
+                // Check if we have data. If not continue. Do this to prevent errors
+                if (empty($node->data) || empty($node->wholeText))
+                    continue;
+
                 // Make the actual element with tag
                 $element = $this->createElement($tag);
                 $element->appendChild($node);
